@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendar Cita | ElectroDrive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("TU_USER_ID"); // Reemplaza con tu Public Key
+    })();
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('portada2.jpg') center center / cover no-repeat; /* Imagen como fondo */
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.1); /* Transparencia ligera */
+      backdrop-filter: blur(12px); /* Efecto difuminado */
+      -webkit-backdrop-filter: blur(12px); /* Compatibilidad Safari */
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #00d2ff;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .form-group input::placeholder {
+      color: #ddd;
+    }
+
+    .form-group select option {
+      color: #000;
+    }
+
+    .btn {
+      background-color: #00a8ff;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #0090e6;
+    }
+
+    .mensaje {
+      margin-top: 15px;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .overlay {
+        padding: 25px;
+      }
+      h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <form action="procesar.php" method="post" id="formulario-cita">
+  <div class="overlay">
+    <h2>Agendar una Cita para cargar tu vehículo</h2>
+
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombreCompleto" placeholder="Tu nombre" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="correoElectronico" placeholder="correo@ejemplo.com" required />
+      </div>
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono"  name="telefono" placeholder="3000000000" required />
+      </div>
+      <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha"  name="fecha" required />
+      </div>
+      <div class="form-group">
+        <label for="hora">Hora</label>
+        <input type="time" id="hora" name="hora" required />
+      </div>
+      <div class="form-group">
+        <label for="servicio">Servicio</label>
+        <select id="servicio" name="servicio[]" multiple>
+          <option value="">Selecciona un servicio</option>
+          <option value="Carga rapida">Carga rápida</option>
+          <option value="Carga lenta">Carga lenta</option>
+          <option value="Carga ultrarapida">Carga ultrarrápida</option>
+        </select>
+      </div>
+      <button type="submit" id="Enviar" class="btn">Enviar</button>
+      <div id="mensaje" class="mensaje"></div>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById('formulario-cita');
+    const mensaje = document.getElementById('mensaje');
+
+    form.addEventListener('submit', function(e) {
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+
+      // Get all selected options from the multiple select
+      const servicioSelect = document.getElementById('servicio');
+      const servicioOptions = [...servicioSelect.options].filter(option => option.selected && option.value);
+      const servicio = servicioOptions.map(option => option.value);
+
+      if (!nombre || !email || !telefono || !fecha || !hora || servicio.length === 0) {
+        e.preventDefault();
+        mensaje.style.color = '#ff6b6b';
+        mensaje.textContent = 'Por favor completa todos los campos.';
+        return;
+      }
+    });
+  </script>
+</body>
+</html>
